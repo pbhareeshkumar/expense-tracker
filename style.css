@@ -1,0 +1,85 @@
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, sans-serif;
+}
+
+body {
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #f5f5f7;
+  color: #1a1a1a;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-size: 18px;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+
+#expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+#expense-form input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+#expense-form button {
+  padding: 10px;
+  background: #007aff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#expense-form button:hover {
+  background: #005ecb;
+}
+
+#totals-list, #expense-list {
+  list-style: none;
+  padding: 0;
+}
+
+#totals-list li, #expense-list li {
+  background: white;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  font-size: 14px;
+}
+
+#expense-list button {
+  background: #ff3b30;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#expense-list button:hover {
+  background: #d6291f;
+}
