@@ -99,7 +99,7 @@ def update_expense(expense_id):
     note=data.get("note","")
 
     conn = get_db_connection()
-    cursor=conn.cursor
+    cursor=conn.cursor()
     cursor.execute(
         "UPDATE expenses SET amount = %s, category = %s, date=%s, note=%s WHERE id=%s",
         (amount,category,date,note,expense_id)
