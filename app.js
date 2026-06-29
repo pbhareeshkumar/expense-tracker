@@ -27,6 +27,8 @@ document.getElementById("expense-form").addEventListener("submit", async functio
     });
 
     document.getElementById("expense-form").reset();
+    const today=new Date().toISOString().split("T")[0];
+    document.getElementById("date").value = today;
     loadExpenses();
     loadTotals();
 });
