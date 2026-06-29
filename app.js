@@ -61,13 +61,26 @@ async function loadExpenses(){
     });
 }
 
-async function deleteExpense(id) {
-  await fetch(`${API_URL}/expenses/${id}`, {
+let pendingDeleteId = null; // variable that remembers which expense is being deleted
+
+function deleteExpense(id){
+  pendingDeleteId = id;
+  document.getElementById("confirm-modal").classList.remove("hidden"); //removes the popup
+}
+
+document.getElementById("confirm-yes").addEventListener("click", async() => {
+  await fetch(`${API_URL}/expenses/${pendingDeleteId}`, {
     method: "DELETE"
   });
-  loadExpenses(); // refresh list after deleting
+  document.getElementById("confirm-modal").classList.add("hidden");
+  loadExpenses();
   loadTotals();
-}
+});
+
+document.getElementById("confirm-no").addEventListener("click", () => {
+  document.getElementById("confirm-modal").classList.add("hidden");
+});
+
 
 async function loadTotals() {
   const response = await fetch(`${API_URL}/expenses/totals`);
