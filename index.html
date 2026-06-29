@@ -9,7 +9,18 @@
     <h1>Expense Tracker</h1>
 
     <form id="expense-form">
-        <input type = "number" id = "amount" placeholder="Amount" required>
+        <div class="amount-wrapper">
+            <input type = "number" id = "amount" placeholder="Amount" required min="0">
+            <button type="button" id="clear-amount">Clear</button>
+        </div>
+        <div id="quick-amounts">
+            <button type="button" data-value="5">+5</button>
+            <button type="button" data-value="10">+10</button>
+            <button type="button" data-value="20">+20</button>
+            <button type="button" data-value="50">+50</button>
+            <button type="button" data-value="100">+100</button>
+            <button type="button" data-value="500">+500</button>
+        </div>
         <input type = "text" id = "category" placeholder="Category" required>
         <input type = "date" id = "date" placeholder="Date" required>
         <input type = "text" id = "note" placeholder="Note (optional)">
