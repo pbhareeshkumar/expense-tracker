@@ -33,6 +33,18 @@
     <h2>Expenses</h2>
     <ul id="expense-list"></ul>
 
+    <div id ="edit-modal" class="hidden">
+        <div class = "modal-box">
+            <p>Edit Expenses</p>
+            <input type="number" id="edit-amount" placeholder="Amount" required min="0">
+            <input type="text" id="edit-category" placeholder="Category" required>
+            <input type="date" id="edit-date" required>
+            <input type="text" id="edit-note" placeholder="Note (optional)">
+            <button id="edit-save">Save</button>
+            <button id="edit-cancel">Cancel</button>
+        </div>
+    </div>
+
     <div id="confirm-modal" class="hidden">
         <div class="modal-box">
             <p>Are you sure you want to delete this expense?</p>
@@ -42,6 +54,6 @@
     </div>
 
     <script src="app.js"></script>
-    
+
 </body>
 </html>
