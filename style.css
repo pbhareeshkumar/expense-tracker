@@ -119,7 +119,7 @@ input[type="number"]::-webkit-inner-spin-button {
   padding-right: px;
 }
 
-.amount-wrapper button {
+#expense-form .amount-wrapper button {
   position: absolute;
   right: 8px;
   top: 50%;
@@ -128,7 +128,8 @@ input[type="number"]::-webkit-inner-spin-button {
   border: none;
   color: #999;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
+  padding: 2px 2px;
 }
 
 .amount-wrapper button:hover {
