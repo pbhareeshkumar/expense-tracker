@@ -90,6 +90,18 @@ def get_totals():
     totals=[dict(row) for row in rows]
     return jsonify(totals)
 
+@app.route("/expenses/total", methods = ["GET"])
+def get_total():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT SUM(amount) as total FROM expenses")
+    row = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    total=row[0] if row[0] is not None else 0
+    return jsonify({"total": total})
+
 @app.route("/expenses/<int:expense_id>", methods=["PUT"]) #to update a db
 def update_expense(expense_id):
     data=request.get_json()
