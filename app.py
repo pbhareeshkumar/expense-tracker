@@ -40,7 +40,7 @@ def home():
 def add_expense():
     data = request.get_json() #reads the json data
     amount = data["amount"]
-    category = data["category"]
+    category = data["category"].strip().upper()
     date = data["date"]
     note = data.get("note","") #setting it to empty string if null
 

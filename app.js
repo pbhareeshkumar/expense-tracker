@@ -3,6 +3,9 @@ const API_URL ="https://expense-tracker-backend-lrkz.onrender.com"
 document.addEventListener("DOMContentLoaded",()=>{
     loadExpenses();
     loadTotals();
+
+    const today=new Date().toISOString().split("T")[0]; //splits the string at T and takes the first part
+    document.getElementById("date").value=today;
 });
 
 document.getElementById("clear-amount").addEventListener("click", () => {
