@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import sqlite3
 from flask_cors import CORS
+import os
 
 app=Flask(__name__) #application object
 CORS(app)
@@ -65,7 +66,8 @@ def get_totals():
     return jsonify(totals)
 
 if __name__ == "__main__":
-    app.run(debug=True) #actually starts the server, and auto restarts
+    port = int(os.environ.get("PORT",5000))
+    app.run(host="0.0.0.0",port=port)
 
 
     
