@@ -1,17 +1,24 @@
 from flask import Flask, request, jsonify
-import sqlite3
+import psycopg2
+import psycopg2.extras
 from flask_cors import CORS
 import os
 
 app=Flask(__name__) #application object
 CORS(app)
 
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+def get_db_connection():
+    conn = psycopg2.connect(DATABASE_URL) 
+    return conn
+
 def init_db():
-    conn = sqlite3.connect("expenses.db")
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS expenses (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             amount REAL NOT NULL,
             category TEXT NOT NULL,
             date TEXT NOT NULL,
@@ -19,14 +26,11 @@ def init_db():
         )
     """)
     conn.commit()
+    cursor.close()
     conn.close()
 
 init_db()
 
-def get_db_connection():
-    conn = sqlite3.connect("expenses.db")
-    conn.row_factory = sqlite3.Row #makes them behave like dictionaries 
-    return conn
 
 @app.route("/") #when URL s visited the function below this is run
 def home():
@@ -43,10 +47,11 @@ def add_expense():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO expenses (amount, category, date, note) VALUES (?, ?, ?, ?)",
+        "INSERT INTO expenses (amount, category, date, note) VALUES (%s, %s, %s, %s)",
         (amount, category, date, note)
     )
     conn.commit()
+    cursor.close()
     conn.close()
 
     return jsonify({"message": "Expense Added Succesfully"}), 201
@@ -54,9 +59,10 @@ def add_expense():
 @app.route("/expenses", methods=["GET"])
 def get_expenses():
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cursor.execute("SELECT * FROM expenses")
     rows = cursor.fetchall()
+    cursor.close()
     conn.close()
 
     expenses = [dict(row) for row in rows]
@@ -66,17 +72,19 @@ def get_expenses():
 def delete_expense(expense_id):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM EXPENSES WHERE id = ?", (expense_id,))
+    cursor.execute("DELETE FROM EXPENSES WHERE id = %s", (expense_id,))
     conn.commit()
+    cursor.close()
     conn.close()
     return jsonify({"message": "Expense deleted"}), 200
 
 @app.route("/expenses/totals", methods = ["GET"])
 def get_totals():
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cursor.execute("SELECT CATEGORY, SUM(amount) as total FROM expenses GROUP BY category")
     rows=cursor.fetchall()
+    cursor.close()
     conn.close()
 
     totals=[dict(row) for row in rows]
