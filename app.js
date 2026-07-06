@@ -3,6 +3,8 @@ const API_URL ="https://expense-tracker-backend-lrkz.onrender.com"
 document.addEventListener("DOMContentLoaded",()=>{
     loadExpenses();
     loadTotals();
+    loadTotalExpense();
+    renderQuickCategories();
 
     const today=new Date().toISOString().split("T")[0]; //splits the string at T and takes the first part
     document.getElementById("date").value=today;
@@ -31,6 +33,7 @@ document.getElementById("expense-form").addEventListener("submit", async functio
     document.getElementById("date").value = today;
     loadExpenses();
     loadTotals();
+    loadTotalExpense();
 });
 
 
@@ -89,6 +92,7 @@ document.getElementById("confirm-yes").addEventListener("click", async() => {
   document.getElementById("confirm-modal").classList.add("hidden");
   loadExpenses();
   loadTotals();
+  loadTotalExpense();
 });
 
 document.getElementById("confirm-no").addEventListener("click", () => {
@@ -139,6 +143,7 @@ document.getElementById("edit-save").addEventListener("click", async () => {
   document.getElementById("edit-modal").classList.add("hidden");
   loadExpenses();
   loadTotals();
+  loadTotalExpense();
 });
 
 document.getElementById("edit-cancel").addEventListener("click", () => {
@@ -148,5 +153,60 @@ document.getElementById("edit-cancel").addEventListener("click", () => {
 async function loadTotalExpense(){
   const response = await fetch(`${API_URL}/expenses/total`);
   const data = await response.json();
-  document.getElementById("total-expense").textContent = `Total: ₹${data.total}`;
+  document.getElementById("total-expense").textContent= `Total: ${data.total}`;
 }
+
+function getDefaultCategories(){
+  const stored = localStorage.getItem("defaultCategories"); //stores in browser
+  return stored ? JSON.parse(stored) : []; 
+}
+
+function saveDefaultCategories(categories){
+  localStorage.setItem("defaultCategories", JSON.stringify(categories)); //local stores only as plain text
+}
+
+function renderQuickCategories(){
+  const container = document.getElementById("quick-categories");
+  container.innerHTML = "";
+
+  const categories = getDefaultCategories();
+
+  categories.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = cat;
+    btn.addEventListener("click", () => {
+      document.getElementById("category").value = cat;
+    });
+    container.appendChild(btn);
+  });
+
+  const addBtn = document.createElement("button");
+  addBtn.type = "button";
+  addBtn.textContent ="+";
+  addBtn.addEventListener("click",()=>{
+    document.getElementById("category-modal").classList.remove("hidden");
+  });
+  container.appendChild(addBtn);
+}
+
+document.getElementById("category-save").addEventListener("click", () =>{
+  const input = document.getElementById("new-category-input");
+  const value = input.value.trim().toUpperCase();
+  if(!value) return;
+
+  const categories = getDefaultCategories();
+  if (!categories.includes(value)){ //to prevent adding same category
+    categories.push(value);
+    saveDefaultCategories(categories);
+    renderQuickCategories();
+  }
+
+  input.value="";
+  document.getElementById("category-modal").classList.add("hidden");
+});
+
+document.getElementById("category-cancel").addEventListener("click",()=>{
+  document.getElementById("new-category-input").value="";
+  document.getElementById("category-modal").classList.add("hidden");
+});

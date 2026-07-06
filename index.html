@@ -22,12 +22,14 @@
             <button type="button" data-value="500">+500</button>
         </div>
         <input type = "text" id = "category" placeholder="Category" required>
+        <div id ="quick-categories"></div>
         <input type = "date" id = "date" placeholder="Date" required>
         <input type = "text" id = "note" placeholder="Note (optional)">
         <button type = "submit">Add Expense</button>
     </form>
 
     <h2 id ="totals-heading">Totals by Category</h2>
+    <p id="total-expense"></p>
     <ul id ="totals-list"></ul>
 
     <h2 id="expenses-heading">Expenses</h2>
@@ -50,6 +52,15 @@
             <p>Are you sure you want to delete this expense?</p>
             <button id="confirm-yes">Yes, Delete</button>
             <button id="confirm-no">Cancel</button>
+        </div>
+    </div>
+
+    <div id="category-modal" class ="hidden">
+        <div class="modal-box">
+            <p>Add Default Category</p>
+            <input type="text" id="new-category-input" placeholder="e.g. Snacks">
+            <button id = "category-save">Save</button>
+            <button id = "category-cancel">Cancel</button>
         </div>
     </div>
 
