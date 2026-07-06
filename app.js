@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded",()=>{
     loadTotals();
 });
 
+document.getElementById("clear-amount").addEventListener("click", () => {
+  document.getElementById("amount").value = "";
+});
+
 document.getElementById("expense-form").addEventListener("submit", async function(e) {
     e.preventDefault(); //to prevent default reloding of page
 
@@ -22,6 +26,17 @@ document.getElementById("expense-form").addEventListener("submit", async functio
     document.getElementById("expense-form").reset();
     loadExpenses();
     loadTotals();
+});
+
+
+
+document.querySelectorAll("#quick-amounts button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const amountInput = document.getElementById("amount");
+    const currentValue = parseFloat(amountInput.value) || 0; //if the amount is empty
+    const addValue = parseFloat(btn.dataset.value); //reads the data-value=5
+    amountInput.value = currentValue + addValue;
+  });
 });
 
 async function loadExpenses(){
