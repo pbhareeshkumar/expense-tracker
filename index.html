@@ -30,6 +30,9 @@
 
     <h2 id ="totals-heading">Totals by Category</h2>
     <p id="total-expense"></p>
+    <p id="budget-display"></p>
+    <button id="set-budget-btn" type="button">Set Monthly Budget</button>
+
     <ul id ="totals-list"></ul>
 
     <h2 id="expenses-heading">Expenses</h2>
@@ -61,6 +64,15 @@
             <input type="text" id="new-category-input" placeholder="e.g. Snacks">
             <button id = "category-save">Save</button>
             <button id = "category-cancel">Cancel</button>
+        </div>
+    </div>
+
+    <div id="budget-modal" class="hidden">
+        <div class = "modal-box">
+            <p>Set Monthly Budget</p>
+            <input type ="number" id="budget-input" placeholder="Enter Budget amount" min="0">
+            <button id ="budget-save">Save</button>
+            <button id ="budget-cancel">Cancel</button>
         </div>
     </div>
 

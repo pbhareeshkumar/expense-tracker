@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     loadExpenses();
     loadTotals();
     loadTotalExpense();
+    loadBudget();
     renderQuickCategories();
 
     const today=new Date().toISOString().split("T")[0]; //splits the string at T and takes the first part
@@ -33,6 +34,7 @@ document.getElementById("expense-form").addEventListener("submit", async functio
     document.getElementById("date").value = today;
     loadExpenses();
     loadTotals();
+    loadBudget();
     loadTotalExpense();
 });
 
@@ -92,6 +94,7 @@ document.getElementById("confirm-yes").addEventListener("click", async() => {
   document.getElementById("confirm-modal").classList.add("hidden");
   loadExpenses();
   loadTotals();
+  loadBudget();
   loadTotalExpense();
 });
 
@@ -143,6 +146,7 @@ document.getElementById("edit-save").addEventListener("click", async () => {
   document.getElementById("edit-modal").classList.add("hidden");
   loadExpenses();
   loadTotals();
+  loadBudget();
   loadTotalExpense();
 });
 
@@ -165,6 +169,8 @@ function saveDefaultCategories(categories){
   localStorage.setItem("defaultCategories", JSON.stringify(categories)); //local stores only as plain text
 }
 
+let categoryEditMode=false;
+
 function renderQuickCategories(){
   const container = document.getElementById("quick-categories");
   container.innerHTML = "";
@@ -172,22 +178,59 @@ function renderQuickCategories(){
   const categories = getDefaultCategories();
 
   categories.forEach(cat => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.textContent = cat;
-    btn.addEventListener("click", () => {
-      document.getElementById("category").value = cat;
-    });
-    container.appendChild(btn);
+    if(categoryEditMode){
+      const wrapper = document.createElement("div");
+      wrapper.classList.add("category-delete-wrapper");
+
+      const nameSpan = document.createElement("span");
+      nameSpan.textContent = cat;
+      nameSpan.classList.add("category-delete-name");
+
+      const xSpan = document.createElement("span");
+      xSpan.textContent = "X";
+      xSpan.classList.add("category-delete-x");
+
+      wrapper.appendChild(nameSpan);
+      wrapper.appendChild(xSpan);
+
+      wrapper.addEventListener("click", () => {
+        const updated = categories.filter(c => c !== cat);
+        saveDefaultCategories(updated);
+        categoryEditMode = false;
+        renderQuickCategories();
+      });
+
+      container.appendChild(wrapper);
+
+    } else {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = cat;
+      btn.addEventListener("click", () => {
+        document.getElementById("category").value = cat;
+      });
+      container.appendChild(btn);
+    }
   });
 
   const addBtn = document.createElement("button");
   addBtn.type = "button";
   addBtn.textContent ="+";
+  addBtn.classList.add("add-category-btn");
+
   addBtn.addEventListener("click",()=>{
     document.getElementById("category-modal").classList.remove("hidden");
   });
   container.appendChild(addBtn);
+
+  const editToggleBtn = document.createElement("button");
+  editToggleBtn.type ="button";
+  editToggleBtn.textContent="✏️";
+  editToggleBtn.addEventListener("click", () =>{
+    categoryEditMode = !categoryEditMode;
+    renderQuickCategories();
+  });
+  container.appendChild(editToggleBtn);
 }
 
 document.getElementById("category-save").addEventListener("click", () =>{
@@ -209,4 +252,63 @@ document.getElementById("category-save").addEventListener("click", () =>{
 document.getElementById("category-cancel").addEventListener("click",()=>{
   document.getElementById("new-category-input").value="";
   document.getElementById("category-modal").classList.add("hidden");
+});
+
+function getCurrentMonth(){
+  return new Date().toISOString().split("T")[0].slice(0,7);
+}
+
+async function loadBudget(){
+  const month = getCurrentMonth();
+
+  const budgetRes= await fetch(`${API_URL}/budget/${month}`);
+  const budgetData = await budgetRes.json();
+
+  const totaltRes= await fetch(`${API_URL}/expenses/total`);
+  const totalData = await totaltRes.json();
+
+  const budget = budgetData.amount;
+  const spent = totalData.total;
+  const remaining = budget - spent;
+
+  const display = document.getElementById("budget-display");
+
+  if(budget===0){ 
+    display.textContent="No budget for this month";
+    display.style.color="#999";
+  }else if (remaining <0){
+    display.textContent = `Budget: ₹${budget} | Over by ₹${Math.abs(remaining)}`;
+    display.style.color = "#ff3b30"; // red
+  }else{
+    display.textContent = `Budget: ₹${budget} | Remaining: ₹${remaining}`;
+    display.style.color = remaining < budget * 0.2 ? "#ff9500" : "#34c759";
+  }
+
+}
+
+document.getElementById("set-budget-btn").addEventListener("click", ()=>{
+  document.getElementById("budget-modal").classList.remove("hidden");
+});
+
+document.getElementById("budget-save").addEventListener("click", async () =>{
+  const amount = parseFloat(document.getElementById("budget-input").value);
+
+  if (!amount || amount <= 0) return;
+
+  const month = getCurrentMonth();
+
+  await fetch(`${API_URL}/budget/${month}`,{
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({amount})
+  });
+
+  document.getElementById("budget-modal").classList.add("hidden");
+  document.getElementById("budget-input").value = "";
+  loadBudget();
+});
+
+document.getElementById("budget-cancel").addEventListener("click", () => {
+  document.getElementById("budget-input").value = "";
+  document.getElementById("budget-modal").classList.add("hidden");
 });

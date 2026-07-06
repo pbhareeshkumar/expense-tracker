@@ -136,7 +136,7 @@ input[type="number"]::-webkit-inner-spin-button {
   color: #333;
 }
 
-#confirm-modal, #edit-modal {
+#confirm-modal, #edit-modal, #category-modal, #budget-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -193,4 +193,66 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .modal-box button {
   width: 100%;
+}
+
+#quick-categories {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+#quick-categories button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #007aff;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+#quick-categories button:hover {
+  background: #005ecb;
+}
+
+#quick-categories {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.add-category-btn {
+  margin-left: auto;
+  background: #ddd !important;
+  color: #333 !important;
+}
+
+
+.category-delete-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #ff3b30;
+  cursor: pointer;
+  font-size: 13px;
+  min-width: 40px;
+}
+
+.category-delete-name {
+  color: white;
+  opacity: 0.5;
+}
+
+.category-delete-x {
+  position: absolute;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  opacity: 1;
 }
