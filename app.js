@@ -50,7 +50,10 @@ async function loadExpenses(){
   const expenses = await response.json();
 
   const list = document.getElementById("expense-list");
+  const heading = document.getElementById("expenses-heading");
   list.innerHTML="";
+
+  heading.style.display = expenses.length ===0? "none" : " block"
 
   expenses.forEach(expense => {
     const li = document.createElement("li");
@@ -98,7 +101,10 @@ async function loadTotals() {
   const totals = await response.json();
 
   const list = document.getElementById("totals-list");
+  const heading = document.getElementById("totals-heading");
   list.innerHTML = "";
+
+  heading.style.display = totals.length ===0? "none" : "block";
 
   totals.forEach(item => {
     const li = document.createElement("li");
