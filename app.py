@@ -90,7 +90,7 @@ def get_totals():
     totals=[dict(row) for row in rows]
     return jsonify(totals)
 
-@app.route("/expenses/<int:expense_id", methods=["PUT"]) #to update a db
+@app.route("/expenses/<int:expense_id>", methods=["PUT"]) #to update a db
 def update_expense(expense_id):
     data=request.get_json()
     amount=data["amount"]
