@@ -144,3 +144,9 @@ document.getElementById("edit-save").addEventListener("click", async () => {
 document.getElementById("edit-cancel").addEventListener("click", () => {
   document.getElementById("edit-modal").classList.add("hidden");
 });
+
+async function loadTotalExpense(){
+  const response = await fetch(`${API_URL}/expenses/total`);
+  const data = await response.json();
+  document.getElementById("total-expense").textContent = `Total: ₹${data.total}`;
+}
