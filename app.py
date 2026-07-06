@@ -90,6 +90,26 @@ def get_totals():
     totals=[dict(row) for row in rows]
     return jsonify(totals)
 
+@app.route("/expenses/<int:expense_id", methods=["PUT"]) #to update a db
+def update_expense(expense_id):
+    data=request.get_json()
+    amount=data["amount"]
+    category=data["category"].strip().upper()
+    date=data["date"]
+    note=data.get("note","")
+
+    conn = get_db_connection()
+    cursor=conn.cursor
+    cursor.execute(
+        "UPDATE expenses SET amount = %s, category = %s, date=%s, note=%s WHERE id=%s",
+        (amount,category,date,note,expense_id)
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Expense updated"}), 200
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT",5000))
     app.run(host="0.0.0.0",port=port)
