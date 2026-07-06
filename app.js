@@ -45,23 +45,32 @@ document.querySelectorAll("#quick-amounts button").forEach(btn => {
 });
 
 async function loadExpenses(){
-    const response = await fetch(`${API_URL}/expenses`); // await - pauses running till fetched
-    const expenses = await response.json();
 
-    const list = document.getElementById("expense-list");
-    list.innerHTML="";
+  const response = await fetch(`${API_URL}/expenses`); // await - pauses running till fetched
+  const expenses = await response.json();
 
-    expenses.forEach(expense => {
-        const li = document.createElement("li");
-        li.textContent = `${expense.amount} - ${expense.category} (${expense.date}) ${expense.note}`
-        const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "Delete";
-        deleteBtn.addEventListener("click", () => deleteExpense(expense.id));
+  const list = document.getElementById("expense-list");
+  list.innerHTML="";
 
-        li.appendChild(deleteBtn);
-        list.appendChild(li);
-    });
-}
+  expenses.forEach(expense => {
+    const li = document.createElement("li");
+    li.textContent = `${expense.amount} - ${expense.category} (${expense.date}) ${expense.note}`;
+
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.addEventListener("click", () => openEditModal(expense));
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.addEventListener("click", () => deleteExpense(expense.id));
+
+    li.appendChild(editBtn);
+    li.appendChild(deleteBtn);
+    list.appendChild(li);
+  });
+
+
+};
 
 let pendingDeleteId = null; // variable that remembers which expense is being deleted
 
@@ -97,3 +106,35 @@ async function loadTotals() {
     list.appendChild(li);
   });
 }
+
+let pendingEditId = null;
+
+function openEditModal(expense) {
+  pendingEditId = expense.id;
+  document.getElementById("edit-amount").value = expense.amount;
+  document.getElementById("edit-category").value = expense.category;
+  document.getElementById("edit-date").value = expense.date;
+  document.getElementById("edit-note").value = expense.note;
+  document.getElementById("edit-modal").classList.remove("hidden");
+}
+
+document.getElementById("edit-save").addEventListener("click", async () => {
+  const amount = document.getElementById("edit-amount").value;
+  const category = document.getElementById("edit-category").value;
+  const date = document.getElementById("edit-date").value;
+  const note = document.getElementById("edit-note").value;
+
+  await fetch(`${API_URL}/expenses/${pendingEditId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ amount: parseFloat(amount), category, date, note })
+  });
+
+  document.getElementById("edit-modal").classList.add("hidden");
+  loadExpenses();
+  loadTotals();
+});
+
+document.getElementById("edit-cancel").addEventListener("click", () => {
+  document.getElementById("edit-modal").classList.add("hidden");
+});
