@@ -25,6 +25,14 @@ def init_db():
             note TEXT
         )
     """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS budgets (
+            id SERIAL PRIMARY KEY,
+            month TEXT NOT NULL UNIQUE,
+            amount REAL NOT NULL   
+        )
+    """)
     conn.commit()
     cursor.close()
     conn.close()
@@ -121,6 +129,37 @@ def update_expense(expense_id):
     conn.close()
 
     return jsonify({"message": "Expense updated"}), 200
+
+@app.route("/budget/<month>", methods = ["GET"])
+def get_budget(month):
+    conn=get_db_connection()
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) #makes rows behave like dictionaries
+    cursor.execute("SELECT amount FROM budgets WHERE month = %s",(month,))
+    row=cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    return jsonify({"amount": row["amount"] if row else 0})
+
+@app.route("/budget/<month>", methods = ["POST"])
+def set_budget(month):
+    data=request.get_json()
+    amount = data["amount"]
+    
+    conn=get_db_connection()
+    cursor=conn.cursor()
+    cursor.execute("""
+        INSERT INTO budgets (month, amount)
+        VALUES (%s, %s)
+        ON CONFLICT (month) DO UPDATE SET amount = EXCLUDED.amount
+    """, (month,amount))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Budget set"}), 200
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT",5000))
