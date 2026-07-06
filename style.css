@@ -135,7 +135,7 @@ input[type="number"]::-webkit-inner-spin-button {
   color: #333;
 }
 
-#confirm-modal {
+#confirm-modal, #edit-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -145,10 +145,6 @@ input[type="number"]::-webkit-inner-spin-button {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-#confirm-modal.hidden {
-  display: none;
 }
 
 .modal-box {
@@ -174,4 +170,26 @@ input[type="number"]::-webkit-inner-spin-button {
 
 #confirm-no {
   background: #ddd;
+}
+
+.hidden{
+  display:none !important;
+}
+
+.modal-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-box input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.modal-box button {
+  width: 100%;
 }
