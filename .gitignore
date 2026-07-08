@@ -4,3 +4,4 @@ venv/
 __pycache__/
 expenses.db
 .DS_Store
+config.js
