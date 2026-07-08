@@ -1,4 +1,4 @@
-const API_URL ="https://expense-tracker-backend-lrkz.onrender.com"
+const API_URL = CONFIG.API_URL;
 
 document.addEventListener("DOMContentLoaded",()=>{
     loadExpenses();
