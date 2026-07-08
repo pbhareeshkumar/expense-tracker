@@ -39,6 +39,11 @@ pip install -r requirements.txt
 # Set your database URL as an environment variable
 export DATABASE_URL="your_postgresql_url_here"
 
+# Copy the example config and add your backend URL
+cp config-example.js config.js
+# Then edit config.js with your actual backend URL
+
+
 # Run the backend
 python3 app.py
 ```
@@ -49,10 +54,6 @@ python3 -m http.server 5500
 ```
 
 Visit `http://localhost:5500/index.html`
-
-# Copy the example config and add your backend URL
-cp config-example.js config.js
-# Then edit config.js with your actual backend URL
 
 ## What I learned
 
